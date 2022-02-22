@@ -1,0 +1,98 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Saving/Save Menu Manager.gd" type="Script" id=1]
+
+[node name="Save Menu" type="Control"]
+margin_left = 6.0
+margin_top = 5.0
+margin_right = 46.0
+margin_bottom = 45.0
+rect_scale = Vector2( 4, 4 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Saves" type="VBoxContainer" parent="."]
+margin_top = 57.0
+margin_right = 118.0
+margin_bottom = 557.0
+rect_min_size = Vector2( 118, 500 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="create" type="Button" parent="."]
+margin_right = 108.0
+margin_bottom = 52.0
+text = "Create New Save"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Save_Manip" type="HBoxContainer" parent="."]
+margin_left = 123.0
+margin_right = 269.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="save" type="Button" parent="Save_Manip"]
+margin_right = 41.0
+margin_bottom = 40.0
+text = "Save"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="load" type="Button" parent="Save_Manip"]
+margin_left = 45.0
+margin_right = 87.0
+margin_bottom = 40.0
+text = "Load"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="delete" type="Button" parent="Save_Manip"]
+margin_left = 91.0
+margin_right = 146.0
+margin_bottom = 40.0
+text = "Delete"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+margin_left = 124.0
+margin_top = 46.0
+margin_right = 357.0
+margin_bottom = 195.0
+rect_scale = Vector2( 4, 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="PopupMenu"]
+margin_left = 57.0
+margin_top = 31.0
+margin_right = 169.0
+margin_bottom = 45.0
+text = "Enter Save Name:"
+
+[node name="LineEdit" type="LineEdit" parent="PopupMenu"]
+margin_left = 25.0
+margin_top = 59.0
+margin_right = 203.0
+margin_bottom = 83.0
+max_length = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="create" to="." method="_on_create_pressed"]
+[connection signal="pressed" from="Save_Manip/save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="Save_Manip/load" to="." method="_on_load_pressed"]
+[connection signal="pressed" from="Save_Manip/delete" to="." method="_on_delete_pressed"]
+[connection signal="text_entered" from="PopupMenu/LineEdit" to="." method="_on_LineEdit_text_entered"]
