@@ -6,9 +6,10 @@ onready var enemey = preload("res://enemies/Enemy.tscn")
 
 
 func _ready():
-	var p = player.instance()
-	p.global_position = $player_spawn.global_position
-	add_child(p)
+	#var p = player.instance()
+	#p.global_position = $player_spawn.global_position
+	#add_child(p)
+	pass
 
 func _unhandled_input(event):
 	if Input.is_action_just_pressed("ui_accept"):
