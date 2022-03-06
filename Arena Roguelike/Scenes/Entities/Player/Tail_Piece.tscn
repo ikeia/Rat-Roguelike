@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 8.06226
+
+[node name="Tail_Piece" type="RigidBody2D"]
+mass = 175.0
+gravity_scale = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+disabled = true
+
+[node name="PinJoint2D" type="PinJoint2D" parent="."]
+position = Vector2( 0, 9 )
+node_a = NodePath("..")
+bias = 0.9
+softness = 0.4
