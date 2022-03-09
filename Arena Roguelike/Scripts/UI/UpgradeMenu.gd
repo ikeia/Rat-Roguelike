@@ -10,7 +10,10 @@ var openDuration = 5
 
 var upgradeSelection:Array = [GM.UpgradeType.CRIT]
 
+var choosen = true
+
 func _ready(): 
+	$AnimationPlayer.play("begin")
 	visible = false
 	UI.set(name,self)
 	setInfo(-1)
@@ -38,15 +41,16 @@ func open():
 	$InfoPanel.rect_position.y += offset.y
 	visible = true
 	$Tween.start()
+	UI.StatPanel.open()
 	yield($Tween,"tween_all_completed")
-	for choice in choices:
-		choice.disabled = false
+	choosen = false
 
 	
 
 func close():
 	$AnimationPlayer.stop(false)
-	$AnimationPlayer.play("begin")
+	UI.StatPanel.close()
+	#$AnimationPlayer.play("begin")
 	$Tween.stop_all()
 	$Tween.interpolate_property($Title,"rect_position",$Title.rect_position,$Title.rect_position-offset, openDuration*1, Tween.TRANS_ELASTIC)
 	$Tween.interpolate_property($Panel,"rect_position",$Panel.rect_position,$Panel.rect_position-offset, openDuration*0.6, Tween.TRANS_ELASTIC)
@@ -61,6 +65,7 @@ func close():
 		choice.modulate.a = 1
 	$AnimationPlayer.play("begin")
 	$Title.self_modulate.a = 0
+	
 
 func generateUpgrades():
 	randomize()
@@ -77,12 +82,15 @@ func setInfo(choice:int):
 		info.bbcode_text = ""
 		upgradeName.text = ""
 		return
+	UI.StatPanel.set_values(GM.UpgradeType[upgradeSelection[choice]])
 	info.bbcode_text = GM.UpgradeInfo[GM.UpgradeType[upgradeSelection[choice]]] 
 	upgradeName.text = GM.UpgradName[GM.UpgradeType[upgradeSelection[choice]]]
 	choices[choice].modulate.a = 1
+	
 
 func exitButton():
 	setInfo(-1)
+	UI.StatPanel.reset_mods()
 	for choice in choices:
 		choice.modulate.a = 0.5
 
@@ -93,17 +101,17 @@ func presentUpgrades():
 		c.modulate.a = 0.5
 
 func chooseUpgrade(choice:int):
-	for choice in choices:
-		choice.disabled = true
-	if GM.UpgradeType[upgradeSelection[choice]] != null:
-		UI.obtainUpgrade(GM.UpgradeType[upgradeSelection[choice]])
-		print("Gained ",upgradeSelection[choice],"!")
-		$Tween.interpolate_property(choices[choice],"rect_position",choices[choice].rect_position,choices[choice].rect_position-offset,3,Tween.TRANS_ELASTIC)
-		$Tween.interpolate_property(choices[choice],"modulate",choices[choice].modulate,choices[choice].modulate-Color(0,0,0,1),3,Tween.TRANS_QUAD)
-		$Tween.start()
-		yield($Tween,"tween_all_completed")
-		UI.close()
-	else: printerr("The upgrade: ",choice," does not exist!")
+	if !choosen:
+		choosen = true
+		if GM.UpgradeType[upgradeSelection[choice]] != null:
+			UI.obtainUpgrade(GM.UpgradeType[upgradeSelection[choice]])
+			print("Gained ",upgradeSelection[choice],"!")
+			$Tween.interpolate_property(choices[choice],"rect_position",choices[choice].rect_position,choices[choice].rect_position-offset,3,Tween.TRANS_ELASTIC)
+			$Tween.interpolate_property(choices[choice],"modulate",choices[choice].modulate,choices[choice].modulate-Color(0,0,0,1),3,Tween.TRANS_QUAD)
+			$Tween.start()
+			yield($Tween,"tween_all_completed")
+			UI.close()
+		else: printerr("The upgrade: ",choice," does not exist!")
 
 
 func _on_Tween_tween_completed(object, key):

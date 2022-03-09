@@ -1,0 +1,7 @@
+[gd_scene format=2]
+
+[node name="tail_body_joint" type="PinJoint2D"]
+position = Vector2( 2, 31 )
+node_a = NodePath("..")
+bias = 0.9
+softness = 0.4

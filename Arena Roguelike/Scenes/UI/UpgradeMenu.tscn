@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Assets/Upgrades/crit_hover.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/UI/UpgradeMenu.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Themes/MenuTheme.tres" type="Theme" id=3]
 [ext_resource path="res://Assets/Fonts/Rubik-VariableFont_wght.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Assets/Upgrades/strength.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Upgrades/Sharpness.png" type="Texture" id=6]
 
 [sub_resource type="StyleBoxFlat" id=21]
 draw_center = false
@@ -187,7 +188,7 @@ tracks/1/keys = {
 "values": [ Vector2( 127, 0 ) ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("Choices:rect_position")
+tracks/2/path = NodePath("Title:rect_position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -196,10 +197,10 @@ tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 198, -163 ) ]
+"values": [ Vector2( 380, -814 ) ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("Title:rect_position")
+tracks/3/path = NodePath("Panel:rect_position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -208,10 +209,10 @@ tracks/3/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 380, -814 ) ]
+"values": [ Vector2( -271, -881 ) ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("Panel:rect_position")
+tracks/4/path = NodePath("Choices/Choice:rect_position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
@@ -220,10 +221,10 @@ tracks/4/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( -271, -881 ) ]
+"values": [ Vector2( 0, 0 ) ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("Choices/Choice:rect_position")
+tracks/5/path = NodePath("Choices/Choice2:rect_position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
@@ -232,10 +233,10 @@ tracks/5/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 0, 0 ) ]
+"values": [ Vector2( 662, 0 ) ]
 }
 tracks/6/type = "value"
-tracks/6/path = NodePath("Choices/Choice2:rect_position")
+tracks/6/path = NodePath("Choices/Choice3:rect_position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/imported = false
@@ -244,10 +245,10 @@ tracks/6/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 662, 0 ) ]
+"values": [ Vector2( 1324, 0 ) ]
 }
 tracks/7/type = "value"
-tracks/7/path = NodePath("Choices/Choice3:rect_position")
+tracks/7/path = NodePath("Choices:rect_position")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/imported = false
@@ -256,7 +257,7 @@ tracks/7/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 1324, 0 ) ]
+"values": [ Vector2( 198, -239 ) ]
 }
 
 [node name="UpgradeMenu" type="Control"]
@@ -314,9 +315,9 @@ __meta__ = {
 [node name="Choice2" type="TextureButton" parent="Choices"]
 margin_left = 662.0
 margin_right = 1174.0
-margin_bottom = 456.0
+margin_bottom = 481.0
 mouse_default_cursor_shape = 2
-texture_normal = ExtResource( 1 )
+texture_normal = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

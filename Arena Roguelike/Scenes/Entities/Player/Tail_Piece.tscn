@@ -6,6 +6,8 @@ radius = 8.06226
 [node name="Tail_Piece" type="RigidBody2D"]
 mass = 175.0
 gravity_scale = 0.0
+linear_damp = 0.0
+angular_damp = 0.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

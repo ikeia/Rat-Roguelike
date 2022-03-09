@@ -2,7 +2,7 @@ extends Node
 
 var Wave
 var Player
-var Weapon
+var Weapons:Array
 var world
 
 enum EntityType{
@@ -38,11 +38,11 @@ enum UpgradeType{
 	#[MAX ~]
 	#ACTIVELEVEL, #If you have an active you can choose to upgrade or get a new one(upgrades persists between actives)
 	#[MAX 3]
-	DASH, #Gives you an additional dash, extends safe window	
+	#DASH, #Gives you an additional dash, extends safe window	
 	#[MAX 4]
 	
 	#SWORD (special sword effects)
-	#SPLIT, #1 additional tail (total flatDamage is distrubuted)
+	SPLIT, #1 additional tail (total flatDamage is distrubuted)
 	
 	#ACTIVES (Mutually Exclusive with cooldown)
 	#HOMING, #Land a guranteed hit (chains on upgrade)
@@ -60,9 +60,9 @@ var UpgradeInfo:Dictionary = {
 	UpgradeType.STRENGTH: "[table=<2>] [cell][color="+NumCol+"]+5[/color] Swing speed[/cell]   [cell]     [color="+NumCol+"]+5[/color] Flat damage[/cell]  [cell][color="+NumCol+"]+3[/color] Player speed[/cell]",
 	UpgradeType.ENDURANCE: "[table=<2>] [cell][color="+NumCol+"]+30[/color] Max health[/cell] [cell]     [color="+NumCol+"]+10[/color] Max stamina[/cell] [cell][color="+NumCol+"]-0.05[/color] Stamina drain[/cell] [cell]     [color="+NumCol+"]-0.1[/color] Stamina recharge[/cell][/table]",
 	#UpgradeType.ACTIVELEVEL: "- OR - |UPGRADE exsisting active|",
-	UpgradeType.DASH: "[color="+NumCol+"]+1[/color] addtional dash",
+	#UpgradeType.DASH: "[color="+NumCol+"]+1[/color] addtional dash",
 	
-	#UpgradeType.SPLIT: "|Gives you an additional tail/weapon and disperses flat damage between them|",
+	UpgradeType.SPLIT: "[color="+NumCol+"]+1[/color] additional tail/weapon and disperses flat damage between them",
 	
 	#UpgradeType.HOMING: "|Land a guranteed hit that can chain on UPGRADE|",
 	#UpgradeType.FLAMING: "|Leave behind a firey trail that lingers longer on UPGRADE|",
@@ -77,9 +77,9 @@ var UpgradName:Dictionary = {
 	UpgradeType.STRENGTH: "Strength",
 	UpgradeType.ENDURANCE: "Endurance",
 	#UpgradeType.ACTIVELEVEL: "- OR - |UPGRADE exsisting active|",
-	UpgradeType.DASH: "Dash",
+	#UpgradeType.DASH: "Dash",
 	
-	#UpgradeType.SPLIT: "|Gives you an additional tail/weapon and disperses flat damage between them|",
+	UpgradeType.SPLIT: "Split",
 	
 	#UpgradeType.HOMING: "|Land a guranteed hit that can chain on UPGRADE|",
 	#UpgradeType.FLAMING: "|Leave behind a firey trail that lingers longer on UPGRADE|",
@@ -94,9 +94,9 @@ var UpgradeIcons:Dictionary = {
 	UpgradeType.STRENGTH: load("res://Assets/Upgrades/strength.png"),
 	UpgradeType.ENDURANCE: load("res://Assets/Upgrades/endurance.png"),
 	#UpgradeType.ACTIVELEVEL: load(), #Some kind of PLUS icon
-	UpgradeType.DASH: load("res://Assets/Upgrades/dash.png"),
+	#UpgradeType.DASH: load("res://Assets/Upgrades/dash.png"),
 	
-	#UpgradeType.SPLIT: load(),
+	UpgradeType.SPLIT: load("res://Assets/Upgrades/dash.png"),
 	
 	#UpgradeType.HOMING: load(),
 	#UpgradeType.FLAMING: load(),
@@ -105,37 +105,48 @@ var UpgradeIcons:Dictionary = {
 	#UpgradeType.BLOCK: load(),
 }
 
-func upgradeStat(upgrade):
+var UpgradeEffects:Dictionary = {
+	UpgradeType.CRIT: {"crit_chance":10,"crit_mult":0.25},
+	UpgradeType.SHARPNESS: {"flat_damage":5,"bleed":2,"bleed_rate":-0.1},
+	UpgradeType.STRENGTH: {"tail_strength":500,"flat_damage":5,"speed":50},
+	UpgradeType.ENDURANCE: {"Max_Health":30,"stamina_rec":-0.5,"stamina_dep":-0.03},
+	#UpgradeType.ACTIVELEVEL: load(), #Some kind of PLUS icon
+	#UpgradeType.DASH: load("res://Assets/Upgrades/dash.png"),
+	UpgradeType.SPLIT: {"flat_damage":-5,},
+	
+	#UpgradeType.HOMING: load(),
+	#UpgradeType.FLAMING: load(),
+	#UpgradeType.FLOWING: load(),
+	#UpgradeType.LEECH: load(),
+	#UpgradeType.BLOCK: load(),
+}
+
+func applyUpgrade(upgrade):
 	match upgrade:
 		UpgradeType.CRIT:
-			Weapon.crit_chance += 10
-			Weapon.crit_mult += 0.25
-			print(Weapon.crit_chance)
+			Player.crit_chance += 10
+			Player.crit_mult += 0.25
+			Player.update_sword()
 		UpgradeType.STRENGTH:
-			Weapon.flatDamage += 5
-			Player.tail_strength += 500
+			Player.flat_damage += 5
+			#Player.tail_strength += 500
+			Player.change_tail_strength(500)
 			Player.speed += 50
-			print(Player.tail_strength)
+			Player.update_sword()
 		UpgradeType.SHARPNESS:
-			Weapon.flatDamage += 5
-			Weapon.bleed += 2
-			Weapon.bleed_rate -= 0.1
-			print(Weapon.bleed)
+			Player.flat_damage += 5
+			Player.bleed += 2
+			Player.bleed_rate -= 0.1
+			Player.update_sword()
 		UpgradeType.ENDURANCE:
 			Player.Max_Health += 30
 			Player.stamina_rec -= 0.5
 			Player.stamina_dep -= 0.03
-		UpgradeType.DASH:
-			printerr("DASH NOT IMPLEMENTED!")
-
-func upgradeSword(upgrade):
-	#match upgrade:
-		#UpgradeType.SPLIT:
-			#pass
-		pass
-
-func upgradeActive(upgrade):
-	#match upgrade:
+		#UpgradeType.DASH:
+			#printerr("DASH NOT IMPLEMENTED!")
+		UpgradeType.SPLIT:
+			#Player.split += 1
+			Player.set_split(1)
 		#UpgradeType.HOMING:
 			#pass
 		#UpgradeType.FLAMING:
@@ -146,4 +157,3 @@ func upgradeActive(upgrade):
 			#pass
 		#UpgradeType.BLOCK: 
 			#pass
-		pass

@@ -2,7 +2,7 @@ extends Node2D
 
 
 onready var player = preload("res://Scenes/Entities/Player/Player_Controller.tscn")
-onready var enemey = load("res://Scenes/Entities/enemies/Enemy.tscn")
+onready var enemey = load("res://Scenes/Entities/enemies/EyeGuy.tscn")
 
 
 func _ready():

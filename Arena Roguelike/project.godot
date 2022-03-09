@@ -29,9 +29,14 @@ config/icon="res://icon.png"
 GM="*res://Scripts/Managers/GameManager.gd"
 UI="*res://Scripts/Managers/UImanager.gd"
 
+[display]
+
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
+
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/Clipboard_Panel/plugin.cfg", "res://addons/GDCharts/plugin.cfg", "res://addons/acro_hitboxes/plugin.cfg", "res://addons/gomask2d/plugin.cfg", "res://addons/zoomy/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/Clipboard_Panel/plugin.cfg", "res://addons/GDCharts/plugin.cfg", "res://addons/SceneFactory/plugin.cfg", "res://addons/acro_hitboxes/plugin.cfg", "res://addons/gomask2d/plugin.cfg", "res://addons/zoomy/plugin.cfg" )
 
 [input]
 

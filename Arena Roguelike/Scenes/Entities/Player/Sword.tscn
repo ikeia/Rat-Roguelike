@@ -36,6 +36,8 @@ lineThickness = 6
 position = Vector2( 31.5319, 543.117 )
 
 [node name="Hit_Box" type="RigidBody2D" parent="Sprite" groups=["hit_box"]]
+collision_layer = 4
+collision_mask = 4
 mode = 1
 mass = 3.0
 physics_material_override = SubResource( 1 )
@@ -52,7 +54,6 @@ length = 1.0
 initial_offset = 1.0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-visible = false
 position = Vector2( -12.5, -224.631 )
 polygon = PoolVector2Array( 17, 256, -2, 222, -4, 119, 24, 119, 25, 226 )
 disabled = true

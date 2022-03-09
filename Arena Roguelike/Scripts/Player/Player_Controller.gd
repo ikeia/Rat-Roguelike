@@ -3,8 +3,9 @@ extends KinematicBody2D
 
 #NODE REFERENCES
 onready var tail_sec = preload("res://Scenes/Entities/Player/Tail_Piece.tscn")
-onready var sword = load("res://Scenes/Entities/Player/Sword.tscn")
-onready var top = load("res://Scenes/Entities/Player/Top_Level.tscn")
+onready var sword = preload("res://Scenes/Entities/Player/Sword.tscn")
+onready var top = preload("res://Scenes/Entities/Player/Top_Level.tscn")
+onready var top_player_joint = preload("res://Scenes/Entities/Player/tail_body_joint.tscn")
 
 #TAIL STUFF
 export(int) var tail_length = 1 setget change_tail_length
@@ -12,17 +13,14 @@ export(float) var tail_width = 10 setget change_tail_width
 const tail_sec_margin = 0.0
 var tail_exists = false
 var previous_points = []
-var tail = null
-var tail_strenth = 2000 setget change_tail_strength
-export(float) var swing_cooldown = 0
-export(int) var stamina_rec = 2
-export(float) var stamina_dep = 0.5
+var tails:Array = []
+
+
 
 #MOVEMENT STUFF
 var direction:Vector2 = Vector2.ZERO
 var prev_direction:Vector2 = Vector2.ZERO
 var bounce_direction:Vector2 = Vector2.ZERO
-var speed = 500
 var accelertion = 100
 var friction = 200
 var current_velocity = Vector2.ZERO
@@ -36,11 +34,25 @@ var swinging = false
 var dead = false
 
 #STATS
-export(float) var Max_Health = 100
+var Stamina:float = 100
 var Health:float = 100
 
+#EXPORT STATS
+export(float) var Max_Health = 100
 export(float) var Max_Stamina = 100
-var Stamina:float = 100
+export(float) var speed = 500
+
+export(int) var split = 3 setget set_split, getSplit
+export(float) var swing_cooldown = 0
+export(int) var stamina_rec = 2
+export(float) var stamina_dep = 0.5
+export(float) var tail_strength = 2000 setget change_tail_strength, getStrength
+
+export(float) var flat_damage = 10
+export(int) var bleed = 1
+export(float) var bleed_rate = 1.5
+export(float) var crit_chance = 10
+export(float) var crit_mult = 2
 
 
 var sword_pos:Vector2 = Vector2(0,0)
@@ -58,12 +70,14 @@ func save():
 		"tail_width" : tail_width
 	}
 	return data
+	
+func update_sword():
+	for tail in tails:
+		tail.get_node("Sword").update_stats()
 
 func despawn():
-	#for child in $Top_Level.get_children():
-		#child.queue_free()
-	if get_node("Top_Level") != null:
-		$Top_Level.queue_free()
+	for child in tails:
+		child.queue_free()
 	queue_free()
 
 func _ready():
@@ -73,7 +87,7 @@ func _ready():
 	
 	tail_sec = load("res://Scenes/Entities/Player/Tail_Piece.tscn")
 	sword = load("res://Scenes/Entities/Player/Sword.tscn")
-	top = load("res://Scenes/Entities/Player/Top_Level.tscn")
+	top = preload("res://Scenes/Entities/Player/Top_Level.tscn")
 	
 	$UI.set_as_toplevel(true)
 	#position = Vector2.ZERO
@@ -82,24 +96,41 @@ func _ready():
 	#$Top_Level.set_as_toplevel(true)
 	#$Top_Level.global_position = global_position
 	#if sword_pos == Vector2.ZERO:
-	call_deferred("change_tail_length",tail_length)	
-	call_deferred("change_tail_width",tail_width)	
+	self.split = split
+	#call_deferred("change_tail_length",tail_length)	
+	#call_deferred("change_tail_width",tail_width)	
 	
 	yield(get_tree().create_timer(0.5),"timeout")
 	set_physics_process(true)
 
-func change_tail_length(length):
-	print(length," Length")
+func set_split(amount):
+	split = amount
+	change_tail_length(tail_length,split)
 
-	if tail != null:
-		print("Deleting old")
-		remove_child(tail)
+func change_tail_length(length = tail_length, amount = split):
+	print("LENGTH: ",length)
+	tail_length = length
+	split = amount
 	tail_exists = false
+	for child in tails:
+		child.queue_free()
+	tails.clear()
+	GM.Weapons.clear()
+	
+	for i in range(amount+1):
+		GM.Weapons.append(add_tail(length))
+	
+	tail_exists = true
+	
+func add_tail(length):
+	tail_sec = load("res://Scenes/Entities/Player/Tail_Piece.tscn")
+	top = load("res://Scenes/Entities/Player/Top_Level.tscn")
+	top_player_joint = load("res://Scenes/Entities/Player/tail_body_joint.tscn")
+	
 	var t = top.instance()
 	add_child(t)
 	t.set_as_toplevel(true)
-	tail = t
-	tail_length = length
+	tails.append(t)
 	if length == 0:
 		length = 1
 	for x in range(length):
@@ -107,23 +138,29 @@ func change_tail_length(length):
 		sec.global_position = Vector2(global_position.x,global_position.y+tail_sec_margin*(length-x))
 		sec.name = String(x)
 		if x == 0:
-			$Top_Level/Sword.global_position = sec.global_position + Vector2(0,160)
-			sec.get_node("PinJoint2D").node_b = get_node("Top_Level/Sword").get_path()
+			tails[-1].get_node("Sword").global_position = sec.global_position + Vector2(0,160)
+			sec.get_node("PinJoint2D").node_b = tails[-1].get_node("Sword").get_path()
 		else:
-			sec.get_node("PinJoint2D").node_b = get_node("Top_Level/"+String(x-1)).get_path()
-		$Top_Level.add_child(sec)
+			sec.get_node("PinJoint2D").node_b = tails[-1].get_node(String(x-1)).get_path()
+		tails[-1].add_child(sec)
 		if x == length-1:
-			$tail_body_joint.node_b = sec.get_path()
-	tail_exists = true
+			var sec_to_player = top_player_joint.instance()
+			sec_to_player.name = sec_to_player.name+String(tails.size()-1)
+			print(sec_to_player.name)
+			self.add_child(sec_to_player)
+			sec_to_player.node_a = self.get_path()
+			sec_to_player.node_b = sec.get_path()
+	return t
 
 func change_tail_width(width):
 	tail_width = width
-	print("Strength: ",tail_strenth)
+	print("Strength: ",tail_strength)
 	print("Width: ",tail_width)
-	$Top_Level/tail.width = width
+	for tail in tails:
+		tail.get_node("tail").width = width
 
 func change_tail_strength(strength):
-	tail_strenth += strength
+	tail_strength += strength
 	self.tail_width += strength*0.001
 			
 func check_input():
@@ -146,18 +183,29 @@ func move_sword():
 	var dir
 	var min_dist = 0.6
 	#var strenth = 1350
-	var force = Vector2(tail_strenth,tail_strenth)
+	var force = Vector2(tail_strength,tail_strength)
 	#var angle = get_angle_to(get_global_mouse_position())
 	#var dir = Vector2(cos(angle),sin(angle)).normalized()
-	dir = (get_global_mouse_position() - $Top_Level/Sword.global_position).normalized()
-	#print(dir)
-	if false:
-		if dir.x < min_dist and dir.x > -min_dist:
-			force.x/=10
-		if dir.y < min_dist and dir.y > -min_dist:
-			force.y/=10
-	dir = (get_global_mouse_position() - global_position).normalized()
-	$Top_Level/Sword.force= force * dir
+	var xAng = 0
+	var mod = 1
+	for tail in tails:
+		var sword = tail.get_node("Sword")
+		#dir = (get_global_mouse_position() - sword.global_position).normalized()
+		#print(dir)
+		if false:
+			if dir.x < min_dist and dir.x > -min_dist:
+				force.x/=10
+			if dir.y < min_dist and dir.y > -min_dist:
+				force.y/=10
+		dir = (get_global_mouse_position() - global_position).normalized()
+		sword.force= force * dir.rotated(deg2rad(xAng* mod))
+		#xAng -= 30
+		xAng += 15
+		mod = -mod
+		
+		#if mod == -1: xAng *= mod
+		#else: xAng = abs(xAng) + 10
+		
 
 
 #Vector2(-44,57)
@@ -165,34 +213,68 @@ func turn_body():
 	#look_at(direction*100+global_position)
 	look_at(get_global_mouse_position())
 	rotation_degrees += 270
-	if !swinging:
-		$Top_Level/Sword.apply_impulse(Vector2.ZERO,tail_strenth*prev_direction)
-		$Top_Level/Sword/Sprite.rotation_degrees = rotation_degrees
+	#if !swinging:
+		#$Top_Level/Sword.apply_impulse(Vector2.ZERO,tail_strenth*prev_direction)
+		#$Top_Level/Sword/Sprite.rotation_degrees = rotation_degrees
 	#$Top_Level/Sword.rotation_degrees = rotation_degrees
 	prev_direction = direction
-	
-func rotate_sword():
-	$Top_Level/Sword/Sprite.look_at(get_global_mouse_position())
-	$Top_Level/Sword/Sprite.rotation_degrees += 270
-	rotation_degrees+= 270
 
+#Rotate all sword instances while accounting for spread and symmetry
+func rotate_sword(delta):
+	#Store angle offset and base reversal mod
+	var xAng = 270
+	var mod = 1
+	
+	#Cycle through all tail instances
+	for tail in tails.size():
+		
+		#Store sword
+		var sword = tails[tail].get_node("Sword")
+
+		#Spread for multiple swords
+		if mod == -1: xAng += 2
+		
+		#ROTATE the SWORD
+		#Hilt
+		sword.rotation = lerp_angle(sword.rotation,(get_global_mouse_position()*1).angle_to_point(sword.position)-89.5 +(xAng * mod),delta*3)
+		#Sword Joint
+		tails[tail].get_node("0").rotation = sword.rotation
+		#Player Joint
+		get_node("tail_body_joint"+String(tail)).rotation = sword.rotation	
+		
+		#Reverse angle to keep swords symmetrical
+		mod = -mod
+
+#Draws a tail from the player to every joint leading up to the sword hilt for each tail instance
 func draw_tail():
-	if tail_exists and get_node("Top_Level/Sword") != null:
-		var points = [$Top_Level/Sword/Sprite.global_position]
-		for x in range(tail_length):
-			var point = get_node("Top_Level/"+String(x))
-			if point != null:
-				points.append(point.global_position)
-		points.append(global_position)
-		$Top_Level/tail.points = points
+	#Checks if any tails exist and if they are stored within the tail array yet
+	if tail_exists and tails[-1] != null:
+		
+		#Cycles through tail instances
+		for tail in tails:
+			
+			#Stores sword hilt position
+			var points = [tail.get_node("Sword/Sprite").global_position]
+			
+			#Cycles through and stores tail hinge joint positions
+			for x in range(tail_length):
+				var point = tail.get_node(String(x))
+				if point != null:
+					points.append(point.global_position)
+					
+			#Store player butt position
+			points.append(global_position)
+			
+			#Give stored positions for the that specifc tail's line 2D to draw
+			tail.get_node("tail").points = points
 
 func trajectory(state):
 	if tail_exists:
-		var line = get_node("Top_Level/trajectory")
+		var line = GM.Weapons[0].get_node("trajectory")
 		if line != null:
 			if state:
 				line.visible = true	
-				line.points[0] = $Top_Level/Sword/Sprite/drag_point.global_position #+ Vector2(72,335)
+				line.points[0] = GM.Weapons[0].get_node("Sword/Sprite/drag_point").global_position #+ Vector2(72,335)
 				line.points[1] = get_global_mouse_position() #+ Vector2(-2475,-1000)#Vector2(460,2800)
 			elif !state:
 				line.visible = false
@@ -208,7 +290,7 @@ func _physics_process(delta):
 			$Timer.start(swing_cooldown)
 		if tail_exists:
 			move_sword()
-			rotate_sword()
+			rotate_sword(delta)
 			trajectory(true)
 	else:
 		swinging = false
@@ -233,6 +315,22 @@ func _physics_process(delta):
 		current_speed = move_toward(current_speed,0,friction)
 	if current_speed != 0:
 		current_velocity = move_and_slide(current_speed*prev_direction)
+		
+	#Damp tail if not swinging
+	for tail in tails:
+		for x in tail_length:
+			var joint = tail.get_node(String(x))
+			var damp = 4
+			if !swinging: damp = 75
+			joint.linear_damp = damp
+			joint.angular_damp = damp
+		if !swinging:
+			var sword = tail.get_node("Sword")
+			sword.apply_impulse(Vector2.ZERO,-current_velocity)
+	
+	
+		
+	
 			
 func kill():
 	var healthBar= $UI/Bars/Health
@@ -274,4 +372,9 @@ func take_damage(amount):
 func _on_HitBox_body_entered(body):
 	if body.is_in_group("damage"):
 		take_damage(10)
-		
+
+func getSplit():
+	return split
+
+func getStrength():
+	return tail_strength

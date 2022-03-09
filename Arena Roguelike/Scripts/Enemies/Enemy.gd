@@ -2,49 +2,67 @@ extends RigidBody2D
 class_name enemy
 
 onready var blood = preload("res://Scripts/Killing/blood.tscn")
+onready var sprite:Sprite = get_node("Sprite")
+onready var ray:RayCast2D = get_node("Sprite/RayCast2D")
+onready var healthBar:ProgressBar = get_node("Enemey_Ui/Health_Bar")
+onready var anim:AnimationPlayer = get_node("AnimationPlayer")
+onready var effect_anim:AnimationPlayer = get_node("effects_anim")
 
 export(int) var agression = 5
 export(int) var vision = 5
 export(int) var speed = 5
 export(int) var power = 5
-export(int) var Health = 10
+export(float) var Health = 10
+export(float) var Max_Health = 100
+export(int) var experience_gain = 5
+
+
+export(float) var rotation_speed = 2
+export(float) var Idle_Spawn_Time = 1
 
 
 var can_move = true
-var bleeding = false
 var bleed:int = 0
+var dead = false
 
-var vel = Vector2(2500,0)
+var vel = Vector2(3000,0)
 
 var target
 
-var state_que = []
-var current_state
-
 func _ready():
-	$Enemey_Ui/Health_Bar.max_value = Health * 10
-	$Enemey_Ui/Health_Bar.visible = false
-	yield(get_tree().create_timer(3),"timeout")
-	blood = preload("res://Scripts/Killing/blood.tscn")
+	healthBar.max_value = Max_Health
+	healthBar.visible = false
+	yield(get_tree().create_timer(Idle_Spawn_Time),"timeout")
+	target_player()
+	init()
+
+func init():
+	pass
+
+func _update(delta):
+	look(target.global_position, delta)
+	movement()
+	if check_attack(): attack()
+
+func check_attack():
+	return false
+
+func attack():
+	pass
+	
+func movement():
+	pass
+
+func target_player():
 	target = GM.Player
-#detect --> follow
-
-#follow/detect --> attack
-#follow/detect --> avoid
-
-#follow/lose --> search
-
-#search --> wander
 
 func die():
+	dead = true
 	for x in range(0,5):
 		var ang = x*72
 		blood(ang,false)
-	$AnimationPlayer.play("death")
-	bleeding = false
-	UI.add_experience(10,global_position)
-
-		
+	anim.play("death")
+	UI.add_experience(experience_gain,global_position)
 
 func blood(angle,one_shot=true):
 	var inst = blood.instance() 
@@ -52,57 +70,45 @@ func blood(angle,one_shot=true):
 	inst.one_shot = one_shot
 	add_child(inst)
 
+func bleed():
+	var damage = GM.Player.flat_damage/5
+	damage += (abs(vel.x) + abs(vel.y))/1000
+	blood(rotation)
+	if !take_damage(damage):die()
+
 func Hit(angle,vel,damage):
+	$Enemey_Ui.set_bleed()
 	damage += (abs(vel.x) + abs(vel.y))/1000
 	blood(angle)
-	if take_damage(damage):
-		$AnimationPlayer.stop(false)
-		$effects_anim.play("stagger")
-		yield(get_tree().create_timer(0.3),"timeout")
-		$AnimationPlayer.play("walk")
-	else:
-		die()
+	if !take_damage(damage):die()
 
 func take_damage(amount):
-	var healthBar= $Enemey_Ui/Health_Bar
 	healthBar.visible = true
-	var target_value = healthBar.value - amount
-	if target_value <= 0:
-		target_value = 0
-	$Enemey_Ui/Tween.interpolate_property(healthBar,"value",healthBar.value,target_value,0.3,Tween.TRANS_EXPO,Tween.EASE_IN)
-	$Enemey_Ui/Tween.start()
-	#while true:
-		#if healthBar.value == target_value:
-			#break
-		#healthBar.value = move_toward(healthBar.value,target_value,healthBar.step)
-	Health = healthBar.value
-	#print(bool(Health)," ENEMEY NOT DEAD")
+	var Health = clamp(healthBar.value - amount,0,Max_Health)
+	$Tween.interpolate_property(healthBar,"value",healthBar.value,Health,0.3,Tween.TRANS_EXPO,Tween.EASE_IN)
+	$Tween.start()
 	return bool(Health)
 		
-
-	
-
 func pulse():
-	apply_impulse(Vector2.ZERO, vel.rotated($Sprite.rotation+89.5))
+	apply_impulse(Vector2.ZERO, vel.rotated(sprite.rotation+89.5))
+	
+func set_constant_speed(speed:int):
+	linear_velocity = vel.rotated(sprite.rotation+89.5)
+
+func look(pos:Vector2,delta):
+	rotation = 0
+	sprite.rotation = lerp_angle(sprite.rotation,pos.angle_to_point(position)-89.5,delta*rotation_speed)
+
+func detect(rays:Array,detect_range:float):
+	for r in rays:
+		if r is RayCast2D:
+			r.cast_to = Vector2(0,detect_range)
+			r.force_raycast_update()
+			if r.is_colliding():
+				if r.get_collider().is_in_group("Player"):
+					return true
+	return false
 
 func _physics_process(delta):
-	$Sprite/RayCast2D.force_raycast_update()
-	if $Sprite/RayCast2D.is_colliding():
-		if $Sprite/RayCast2D.get_collider().is_in_group("Player"):
-			$AnimationPlayer.playback_speed = 2
-	else:
-		$AnimationPlayer.playback_speed = 1.15
-	rotation = 0
-	var player = GM.Player.global_position
-	$Sprite.look_at(player)
-	$Sprite.rotation -= 89.5
-
-func detect():
-	if current_state == "wander" or current_state == "search":
-		state_que.append("follow")
-		
-	elif current_state == "follow":
-		
-		state_que.append("attack")
-
-	
+	if target != null:
+		_update(delta)

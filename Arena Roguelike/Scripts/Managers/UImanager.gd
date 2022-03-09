@@ -4,29 +4,14 @@ var HealthBar:Control setget initHealth, getHealthBar
 var ExperienceBar:Control
 var UpgradeMenu:Control
 var PauseMenu:Control
+var CurrentUpgrades:Control
+var StatPanel:Control
 
 var XP = load("res://Scenes/Entities/XP.tscn")
 
-var upgradesObtained:Array setget obtainUpgrade, CurrentUpgrades
+var upgradesObtained:Array setget obtainUpgrade, GetCurrentUpgrades
 
 var currentMenu:Node
-
-func obtainUpgrade(upgrade):
-	print(upgrade," WOAAAH BRUH")
-	upgradesObtained.append(upgrade)
-	match upgrade:
-		GM.UpgradeClass.STAT:
-			GM.upgradeStat(upgrade)
-		GM.UpgradeClass.SWORD:
-			GM.upgradeSword(upgrade)
-		GM.UpgradeClass.ACTIVE:
-			GM.upgradeActive(upgrade)
-	
-	
-
-
-func CurrentUpgrades():
-	return upgradesObtained
 
 var health:float setget set_health, get_health
 var maxHealth:float setget set_maxHealth, get_maxHealth
@@ -40,6 +25,15 @@ var experience_goal_increase:float = 2
 var level = 1
 
 var wave
+
+func obtainUpgrade(upgrade):
+	if upgradesObtained.size() != level-1:
+		upgradesObtained.append(upgrade)
+		GM.applyUpgrade(upgrade)
+		CurrentUpgrades.add(upgrade)
+
+func GetCurrentUpgrades():
+	return upgradesObtained
 
 func initHealth(bar:Control):
 	HealthBar = bar

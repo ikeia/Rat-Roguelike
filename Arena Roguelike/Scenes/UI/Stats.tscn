@@ -1,0 +1,192 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Assets/Fonts/Rubik-Italic-VariableFont_wght.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Scripts/UI/StatsPanel.gd" type="Script" id=2]
+
+[sub_resource type="StyleBoxFlat" id=28]
+bg_color = Color( 0.145098, 0.145098, 0.164706, 1 )
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color( 1, 1, 1, 1 )
+border_blend = true
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+shadow_color = Color( 0, 0, 0, 0.376471 )
+shadow_offset = Vector2( 30, 30 )
+
+[sub_resource type="DynamicFont" id=27]
+size = 72
+outline_size = 1
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=29]
+size = 32
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=26]
+size = 65
+font_data = ExtResource( 1 )
+
+[node name="Stats" type="Control"]
+pause_mode = 2
+rect_scale = Vector2( 0.7, 0.7 )
+mouse_filter = 1
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+margin_left = -1545.71
+margin_top = -1651.43
+margin_right = -612.714
+margin_bottom = 336.572
+mouse_filter = 1
+size_flags_vertical = 8
+custom_styles/panel = SubResource( 28 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="RichTextLabel" parent="."]
+margin_left = -1316.71
+margin_top = -913.429
+margin_right = -816.714
+margin_bottom = -813.429
+rect_min_size = Vector2( 500, 100 )
+rect_scale = Vector2( 2, 2 )
+custom_fonts/normal_font = SubResource( 27 )
+bbcode_enabled = true
+bbcode_text = "[color=#ff6363][wave amp=50 freq=2]STATS[/wave][/color]"
+text = "STATS"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="toggle text" type="RichTextLabel" parent="."]
+visible = false
+modulate = Color( 1, 0.388235, 0.388235, 1 )
+margin_left = -1320.29
+margin_top = 224.143
+margin_right = -820.286
+margin_bottom = 324.143
+rect_min_size = Vector2( 500, 100 )
+rect_scale = Vector2( 2, 2 )
+custom_fonts/normal_font = SubResource( 29 )
+text = "Tab to toggle"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Stats" type="HBoxContainer" parent="."]
+margin_left = -1508.71
+margin_top = -721.429
+margin_right = -514.715
+margin_bottom = 778.571
+custom_constants/separation = -6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Keys" type="RichTextLabel" parent="Stats"]
+margin_right = 500.0
+margin_bottom = 1500.0
+rect_min_size = Vector2( 500, 1500 )
+custom_fonts/normal_font = SubResource( 26 )
+bbcode_enabled = true
+bbcode_text = "[color=#ffc24d]Max Speed :[/color] 
+[fill][color=#ffc24d]Max Health :[/color] [/fill]
+
+[color=#ffc24d]Max Stamina :[/color] 
+[color=#ffc24d]Recharge Rate :[/color] 
+[color=#ffc24d]Usage Rate :[/color] 
+
+[color=#ffc24d]Swing Speed :[/color] 
+
+[color=#ffc24d]Flat Damage :[/color] 
+
+[color=#ffc24d]Crit Chance :[/color] 
+[color=#ffc24d]Crit Multiplier :[/color] 
+
+[color=#ffc24d]Bleed Stacks :[/color] 
+[color=#ffc24d]Bleed Rate :[/color] 
+"
+text = "Max Speed : 
+Max Health : 
+
+Max Stamina : 
+Recharge Rate : 
+Usage Rate : 
+
+Swing Speed : 
+
+Flat Damage : 
+
+Crit Chance : 
+Crit Multiplier : 
+
+Bleed Stacks : 
+Bleed Rate : 
+"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Values" type="RichTextLabel" parent="Stats"]
+margin_left = 494.0
+margin_right = 994.0
+margin_bottom = 1500.0
+rect_min_size = Vector2( 500, 0 )
+custom_fonts/normal_font = SubResource( 26 )
+bbcode_enabled = true
+bbcode_text = "500
+100
+
+100
++1.5/second
+-0.5/second
+
+20mph
+
+10
+
+0%
+2X
+
+0X
+1.5/second
+"
+text = "500
+100
+
+100
++1.5/second
+-0.5/second
+
+20mph
+
+10
+
+0%
+2X
+
+0X
+1.5/second
+"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="."]
