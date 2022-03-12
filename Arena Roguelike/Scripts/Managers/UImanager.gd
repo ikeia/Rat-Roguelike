@@ -62,6 +62,7 @@ func set_stamina(value:float):
 	
 func set_maxStamina(value:float):
 	maxStamina = value
+	GM.Player
 
 func add_experience(amount:float,position:Vector2 = Vector2.ZERO):
 	experience = clamp(ExperienceBar.current_experience+amount,0,experience_goal)

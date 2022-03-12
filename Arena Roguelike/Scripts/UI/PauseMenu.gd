@@ -19,7 +19,7 @@ func open():
 	$Tween.interpolate_property(self,"modulate",modulate,Color(1,1,1,1),0.3)
 	$Tween.start()
 	get_tree().paused = true
-	UI.StatPanel.open()
+	UI.StatPanel.open(true)
 
 func close():
 	$Tween.stop_all()

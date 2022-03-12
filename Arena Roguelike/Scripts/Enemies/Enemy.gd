@@ -3,7 +3,7 @@ class_name enemy
 
 onready var blood = preload("res://Scripts/Killing/blood.tscn")
 onready var sprite:Sprite = get_node("Sprite")
-onready var ray:RayCast2D = get_node("Sprite/RayCast2D")
+onready var Rays:Array = get_node("Sprite/rays").get_children()
 onready var healthBar:ProgressBar = get_node("Enemey_Ui/Health_Bar")
 onready var anim:AnimationPlayer = get_node("AnimationPlayer")
 onready var effect_anim:AnimationPlayer = get_node("effects_anim")

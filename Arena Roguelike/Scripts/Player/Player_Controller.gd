@@ -6,6 +6,8 @@ onready var tail_sec = preload("res://Scenes/Entities/Player/Tail_Piece.tscn")
 onready var sword = preload("res://Scenes/Entities/Player/Sword.tscn")
 onready var top = preload("res://Scenes/Entities/Player/Top_Level.tscn")
 onready var top_player_joint = preload("res://Scenes/Entities/Player/tail_body_joint.tscn")
+onready var Staminabar = get_node("UI/Bars/Swing")
+onready var UIanim = get_node("UI/AnimationPlayer")
 
 #TAIL STUFF
 export(int) var tail_length = 1 setget change_tail_length
@@ -160,23 +162,21 @@ func change_tail_width(width):
 		tail.get_node("tail").width = width
 
 func change_tail_strength(strength):
-	tail_strength += strength
+	tail_strength = strength
 	self.tail_width += strength*0.001
 			
 func check_input():
 	var v = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	#if Input.is_action_just_pressed("ui_left"):
-	#	self.tail_length += 1
-	#if Input.is_action_just_pressed("ui_right"):
-	#	self.tail_length -= 1
+	if Input.is_action_just_pressed("ui_left"):
+		self.tail_length += 1
+	if Input.is_action_just_pressed("ui_right"):
+		self.tail_length -= 1
+	#if Input.is_action_just_pressed("ui_up"):
+		#self.tail_strength += 125
+	#if Input.is_action_just_pressed("ui_down"):
+		#self.tail_strength -= 125
 	if Input.is_action_just_pressed("ui_up"):
 		UI.add_experience(1,get_global_mouse_position())
-		#self.tail_strenth += 125
-		#self.tail_width += 1
-	#if Input.is_action_just_pressed("ui_down"):
-		#self.tail_strenth -= 125
-		#self.tail_width -= 1
-		#get_parent().get_node("ColorRect").material.set_shader_param("global_position",global_position+$Camera2D.global_position)
 	return v
 
 func move_sword():
@@ -281,11 +281,11 @@ func trajectory(state):
 	
 func _physics_process(delta):
 	$UI.rect_global_position = global_position
-	if Input.is_action_pressed("swing") and $UI/Bars/Swing.value > 0 and !cooling_down:
-		$UI/Bars/Swing.visible = true
+	if Input.is_action_pressed("swing") and Staminabar.value > 0 and !cooling_down:
+		Staminabar.visible = true
 		swinging = true
-		$UI/Bars/Swing.value -= stamina_dep
-		if $UI/Bars/Swing.value == 0:
+		Staminabar.value -= stamina_dep
+		if Staminabar.value == 0:
 			cooling_down = true
 			$Timer.start(swing_cooldown)
 		if tail_exists:
@@ -295,12 +295,12 @@ func _physics_process(delta):
 	else:
 		swinging = false
 		if cooling_down:
-			$UI/AnimationPlayer.queue("cooldown_pulse")
+			UIanim.queue("cooldown_pulse")
 		trajectory(false)
-		if $UI/Bars/Swing.value == $UI/Bars/Swing.max_value:
-			$UI/Bars/Swing.visible = false
+		if Staminabar.value == Staminabar.max_value:
+			Staminabar.visible = false
 		else:
-			$UI/Bars/Swing.value += stamina_rec
+			Staminabar.value += stamina_rec
 		
 	if tail_exists:
 		draw_tail()
@@ -333,15 +333,10 @@ func _physics_process(delta):
 	
 			
 func kill():
-	var healthBar= $UI/Bars/Health
-	$Tween.stop_all()
 	#yield(get_tree().create_timer(1),"timeout")
 	dead = true
 	global_position = get_parent().get_node("player_spawn").global_position
 	scale = Vector2(1,1)
-	#$UI/Bars/Health.value = $UI/Bars/Health.max_value
-	$Tween.interpolate_property(healthBar,"value",healthBar.value,healthBar.max_value,0.5,Tween.TRANS_EXPO,Tween.EASE_IN)
-	$Tween.start()
 	$HitBox/CollisionShape2D.disabled = false
 	$Sprite.modulate.a = 1
 	current_speed = 0
@@ -350,14 +345,11 @@ func kill():
 	yield(get_tree().create_timer(0.5),"timeout")
 	dead = false
 
-func die():
-	pass
-
 
 func _on_Timer_timeout():
 	cooling_down = false
-	$UI/AnimationPlayer.clear_queue()
-	$UI/AnimationPlayer.play("RESET")
+	UIanim.clear_queue()
+	UIanim.play("RESET")
 
 func take_damage(amount):
 	if !dead:
@@ -365,11 +357,12 @@ func take_damage(amount):
 		UI.health = Health
 		if Health == 0:
 			kill()
-	$UI/AnimationPlayer.play("damage")
+	UIanim.play("damage")
 		
 	
 
 func _on_HitBox_body_entered(body):
+	print(body);
 	if body.is_in_group("damage"):
 		take_damage(10)
 

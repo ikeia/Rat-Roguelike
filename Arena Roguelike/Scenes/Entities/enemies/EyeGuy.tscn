@@ -11,7 +11,7 @@ shader = ExtResource( 6 )
 
 [sub_resource type="PhysicsMaterial" id=21]
 friction = 0.75
-bounce = 0.3
+bounce = 0.5
 
 [sub_resource type="CircleShape2D" id=18]
 radius = 64.5368
@@ -283,7 +283,7 @@ pause_mode = 1
 material = SubResource( 26 )
 collision_layer = 7
 collision_mask = 7
-mass = 20.0
+mass = 75.0
 physics_material_override = SubResource( 21 )
 gravity_scale = 0.0
 linear_damp = 0.5
@@ -329,8 +329,22 @@ offset = Vector2( -40, -40 )
 region_enabled = true
 region_rect = Rect2( 241.637, 132.933, 100.106, 105.528 )
 
-[node name="RayCast2D" type="RayCast2D" parent="Sprite"]
+[node name="rays" type="Node2D" parent="Sprite"]
+
+[node name="RayCast2D" type="RayCast2D" parent="Sprite/rays"]
+position = Vector2( -54, 184 )
+scale = Vector2( 1.2, 1.2 )
+enabled = true
+cast_to = Vector2( 0, 750 )
+
+[node name="RayCast2D3" type="RayCast2D" parent="Sprite/rays"]
 position = Vector2( -6, 184 )
+scale = Vector2( 1.2, 1.2 )
+enabled = true
+cast_to = Vector2( 0, 750 )
+
+[node name="RayCast2D2" type="RayCast2D" parent="Sprite/rays"]
+position = Vector2( 40, 184 )
 scale = Vector2( 1.2, 1.2 )
 enabled = true
 cast_to = Vector2( 0, 750 )

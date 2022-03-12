@@ -2,6 +2,7 @@ extends Control
 
 onready var Keys_ref:RichTextLabel = $Stats/Keys
 onready var Values_ref:RichTextLabel = $Stats/Values
+onready var edit_button = $edit_button
 
 var Keys:Array
 var Key_Mods:Dictionary = {
@@ -45,7 +46,13 @@ var Value_Mods:Dictionary = {
 
 var offset = Vector2(0,1000)
 
+var edit_color
+var confirm_color = Color(1,0.4,0.4)
+
 func _ready():
+	
+	$edit.visible = false
+	edit_color = edit_button.modulate
 	_update()
 	UI.StatPanel= self
 	visible = false
@@ -136,7 +143,8 @@ func update_Values():
 		for value in Values:
 			Values_ref.bbcode_text += value
 			
-func open():
+func open(can_edit:bool = false):
+	edit_button.visible = can_edit
 	if $Tween.is_active(): yield($Tween,"tween_all_completed")
 	reset_mods()
 	$Tween.interpolate_property(self,"rect_position",Vector2.ZERO-offset,Vector2.ZERO,1.75,Tween.TRANS_ELASTIC)
@@ -152,3 +160,22 @@ func close():
 	visible = false
 	rect_position.y = 0
 	
+func edit():
+	if $edit.visible:
+		confirm_edit()
+		return
+	for value in $edit.get_children():
+		value.text = String(GM.Player.get(value.name))
+	$edit.visible = true
+	Values_ref.visible = false
+	edit_button.text = "Confirm"
+	$edit_button.modulate = confirm_color
+
+func confirm_edit():
+	$edit.visible = false
+	Values_ref.visible = true
+	for value in $edit.get_children():
+		GM.Player.set(value.name,float(value.text))
+	_update()
+	edit_button.text = "Edit"
+	$edit_button.modulate = edit_color

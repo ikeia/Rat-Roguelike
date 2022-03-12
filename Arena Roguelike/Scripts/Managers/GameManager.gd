@@ -129,8 +129,7 @@ func applyUpgrade(upgrade):
 			Player.update_sword()
 		UpgradeType.STRENGTH:
 			Player.flat_damage += 5
-			#Player.tail_strength += 500
-			Player.change_tail_strength(500)
+			Player.tail_strength += 500
 			Player.speed += 50
 			Player.update_sword()
 		UpgradeType.SHARPNESS:

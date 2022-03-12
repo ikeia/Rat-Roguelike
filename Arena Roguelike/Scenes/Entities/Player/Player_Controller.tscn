@@ -6,7 +6,7 @@
 [ext_resource path="res://Scripts/Managers/UImanager.gd" type="Script" id=4]
 
 [sub_resource type="CapsuleShape2D" id=16]
-radius = 23.5
+radius = 12.5
 height = 39.0
 
 [sub_resource type="Shader" id=6]
@@ -232,7 +232,7 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="CapsuleShape2D" id=15]
-radius = 15.0
+radius = 23.099
 height = 38.0
 
 [node name="Player_Controller" type="KinematicBody2D" groups=["Persist", "Player"]]
@@ -294,9 +294,9 @@ __meta__ = {
 }
 
 [node name="Swing" type="ProgressBar" parent="UI/Bars"]
-margin_top = 14.0
+margin_top = 13.0
 margin_right = 35.0
-margin_bottom = 22.0
+margin_bottom = 20.0
 rect_min_size = Vector2( 0, 7 )
 mouse_filter = 1
 custom_styles/fg = SubResource( 10 )
