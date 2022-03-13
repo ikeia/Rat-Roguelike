@@ -1,5 +1,9 @@
 extends enemy
 	
+	
+var fly_dir:Vector2
+var startingPos:Vector2	
+	
 func init():
 	rotation_speed = 4
 	vel = Vector2(20000,0)

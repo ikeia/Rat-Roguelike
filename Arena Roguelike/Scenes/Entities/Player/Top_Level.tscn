@@ -3,7 +3,7 @@
 [ext_resource path="res://Scenes/Entities/Player/Sword.tscn" type="PackedScene" id=2]
 
 [sub_resource type="Curve" id=10]
-_data = [ Vector2( 0, 0.109091 ), 0.0, 0.0, 0, 0, Vector2( 0.377358, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.787736, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.25 ), 0.0, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 0.109091 ), 0.0, 0.0, 0, 0, Vector2( 0.377358, 0.890909 ), 0.493023, 0.493023, 0, 0, Vector2( 0.731132, 0.872727 ), -0.77091, -0.77091, 0, 0, Vector2( 1, 0.25 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="Gradient" id=11]
 offsets = PoolRealArray( 0, 0.469613, 0.994475, 1 )
@@ -16,6 +16,8 @@ z_index = -1
 points = PoolVector2Array( 0, 0, 0, 0 )
 width_curve = SubResource( 10 )
 default_color = Color( 0.956863, 0.305882, 0.45098, 1 )
+joint_mode = 2
+round_precision = 50
 
 [node name="trajectory" type="Line2D" parent="."]
 z_index = -1

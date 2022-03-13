@@ -21,7 +21,9 @@ var Key_Mods:Dictionary = {
 				  "crit_mult":{"color":"#ffc24d", "waveAmp":"0"},
 
 				  "bleed":{"color":"#ffc24d", "waveAmp":"0"}, 
-				  "bleed_rate":{"color":"#ffc24d", "waveAmp":"0"}
+				  "bleed_rate":{"color":"#ffc24d", "waveAmp":"0"},
+				
+				  "split":{"color":"#ffc24d", "waveAmp":"0"}
 				}
 
 var Values:Array
@@ -41,7 +43,9 @@ var Value_Mods:Dictionary = {
 				  "crit_mult":{"color":"#ffffff", "waveAmp":"0", "change":0},
 
 				  "bleed":{"color":"#ffffff", "waveAmp":"0", "change":0}, 
-				  "bleed_rate":{"color":"#ffffff", "waveAmp":"0", "change":0}
+				  "bleed_rate":{"color":"#ffffff", "waveAmp":"0", "change":0},
+				
+				  "split":{"color":"#ffffff", "waveAmp":"0", "change":0}
 				}
 
 var offset = Vector2(0,1000)
@@ -112,7 +116,9 @@ func update_Keys():
 				  "[cell][wave amp="+mods[8].waveAmp+" freq=2][color="+mods[8].color+"]Crit Multiplier :[/color][/wave][/cell]",
 
 				  "[cell][wave amp="+mods[9].waveAmp+" freq=2][color="+mods[9].color+"]Bleed Stacks :[/color][/wave][/cell]", 
-				  "[cell][wave amp="+mods[10].waveAmp+" freq=2][color="+mods[10].color+"]Bleed Rate :[/color][/wave][/cell][/table]"
+				  "[cell][wave amp="+mods[10].waveAmp+" freq=2][color="+mods[10].color+"]Bleed Rate :[/color][/wave][/cell]",
+				
+				  "[cell][wave amp="+mods[10].waveAmp+" freq=2][color="+mods[10].color+"]Tail Split :[/color][/wave][/cell][/table]"
 			]
 	Keys_ref.bbcode_text = ""
 	for key in Keys:
@@ -129,7 +135,7 @@ func update_Values():
 				  "[cell][wave amp="+mods[3].waveAmp+" freq=2][color="+mods[3].color+"]+"+String(GM.Player.stamina_rec+mods[3].change)+"/second[/color][/wave][/cell]",
 				  "[cell][wave amp="+mods[4].waveAmp+" freq=2][color="+mods[4].color+"]-"+String(GM.Player.stamina_dep+mods[4].change)+"/second[/color][/wave][/cell]", 
 
-				  "[cell][wave amp="+mods[5].waveAmp+" freq=2][color="+mods[5].color+"]"+String(GM.Player.tail_strength+mods[5].change)+"mph[/color][/wave][/cell]", 
+				  "[cell][wave amp="+mods[5].waveAmp+" freq=2][color="+mods[5].color+"]"+String((GM.Player.tail_strength+mods[5].change)/100)+"mph[/color][/wave][/cell]", 
 
 				  "[cell][wave amp="+mods[6].waveAmp+" freq=2][color="+mods[6].color+"]"+String(GM.Player.flat_damage+mods[6].change)+"[/color][/wave][/cell]", 
 
@@ -137,7 +143,9 @@ func update_Values():
 				  "[cell][wave amp="+mods[8].waveAmp+" freq=2][color="+mods[8].color+"]"+String(GM.Player.crit_mult+mods[8].change)+"X[/color][/wave][/cell]",
 
 				  "[cell] [wave amp="+mods[9].waveAmp+" freq=2][color="+mods[9].color+"]"+String(GM.Player.bleed+mods[9].change)+"X[/color][/wave][/cell]", 
-				  "[cell][wave amp="+mods[10].waveAmp+" freq=2][color="+mods[10].color+"]"+String(GM.Player.bleed_rate+mods[10].change)+"/second[/color][/wave][/cell][/table]"
+				  "[cell][wave amp="+mods[10].waveAmp+" freq=2][color="+mods[10].color+"]"+String(1/(GM.Player.bleed_rate+mods[10].change))+"/second[/color][/wave][/cell]",
+				
+				  "[cell][wave amp="+mods[10].waveAmp+" freq=2][color="+mods[10].color+"]"+String(GM.Player.split+mods[10].change)+" tails[/color][/wave][/cell][/table]"
 			]
 		Values_ref.bbcode_text = ""
 		for value in Values:

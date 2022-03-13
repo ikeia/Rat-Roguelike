@@ -810,6 +810,7 @@ margin_left = -399.0
 margin_top = -302.0
 margin_right = 418.0
 margin_bottom = 305.0
+mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -837,11 +838,14 @@ texture = SubResource( 19 )
 
 [node name="Player_Controller" parent="." instance=ExtResource( 1 )]
 position = Vector2( 351, 40 )
-tail_strength = 2500.0
+stamina_dep = 0.3
+tail_strength = 2152.0
 bleed = 1
+crit_chance = 100.0
 
 [node name="UICanvas" type="Node2D" parent="."]
-z_index = 10
+z_index = 15
+z_as_relative = false
 
 [node name="UI" type="Control" parent="UICanvas"]
 margin_right = 40.0

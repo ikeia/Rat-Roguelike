@@ -96,7 +96,7 @@ func set_constant_speed(speed:int):
 	linear_velocity = vel.rotated(sprite.rotation+89.5)
 
 func look(pos:Vector2,delta):
-	rotation = 0
+	#rotation = 0
 	sprite.rotation = lerp_angle(sprite.rotation,pos.angle_to_point(position)-89.5,delta*rotation_speed)
 
 func detect(rays:Array,detect_range:float):

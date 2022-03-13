@@ -278,7 +278,7 @@ margin_left = -271.0
 margin_top = -881.0
 margin_right = 2406.0
 margin_bottom = 744.0
-mouse_filter = 2
+mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -299,6 +299,7 @@ margin_left = 198.0
 margin_top = -163.0
 margin_right = 2034.0
 margin_bottom = 189.0
+mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -375,6 +376,7 @@ margin_left = 318.0
 margin_top = 354.0
 margin_right = 1819.0
 margin_bottom = 666.0
+mouse_filter = 1
 custom_styles/panel = SubResource( 21 )
 __meta__ = {
 "_edit_use_anchors_": false
