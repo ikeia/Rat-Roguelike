@@ -38,7 +38,7 @@ enum UpgradeType{
 	#[MAX ~]
 	#ACTIVELEVEL, #If you have an active you can choose to upgrade or get a new one(upgrades persists between actives)
 	#[MAX 3]
-	#DASH, #Gives you an additional dash, extends safe window	
+	DASH, #Gives you an additional dash, extends safe window	
 	#[MAX 4]
 	
 	#SWORD (special sword effects)
@@ -52,15 +52,32 @@ enum UpgradeType{
 	#BLOCK, #Become your weapon (lasts longer on upgrade)
 }
 
+var UpgradeEffects:Dictionary = {
+	UpgradeType.CRIT: {"crit_chance":10,"crit_mult":0.25},
+	UpgradeType.SHARPNESS: {"flat_damage":5,"bleed":2,"bleed_rate":-0.05},
+	UpgradeType.STRENGTH: {"tail_strength":500,"flat_damage":5,"speed":50},
+	UpgradeType.ENDURANCE: {"Max_Health":30,"stamina_rec":-0.1,"stamina_dep":-0.03},
+	#UpgradeType.ACTIVELEVEL: load(), #Some kind of PLUS icon
+	UpgradeType.DASH: {"stamina_rec":-0.3,"stamina_dep":-0.05},
+	UpgradeType.SPLIT: {"flat_damage":-5,"split":1},
+	
+	#UpgradeType.HOMING: load(),
+	#UpgradeType.FLAMING: load(),
+	#UpgradeType.FLOWING: load(),
+	#UpgradeType.LEECH: load(),
+	#UpgradeType.BLOCK: load(),
+}
+
+
 var NumCol = "#ff5656"
 
 var UpgradeInfo:Dictionary = {
 	UpgradeType.CRIT: "[table=<2>] [cell][color="+NumCol+"]+10[/color] %Chance to crit[/cell] [cell]     [color="+NumCol+"]+0.1[/color] crit multiplier[/cell] [/table]",
 	UpgradeType.SHARPNESS: "[table=<2>] [cell][color="+NumCol+"]+5[/color] Flat damage[/cell] [cell]     [color="+NumCol+"]+2[/color] Bleed over time[/cell] [/table]",
 	UpgradeType.STRENGTH: "[table=<2>] [cell][color="+NumCol+"]+5[/color] Swing speed[/cell]   [cell]     [color="+NumCol+"]+5[/color] Flat damage[/cell]  [cell][color="+NumCol+"]+3[/color] Player speed[/cell]",
-	UpgradeType.ENDURANCE: "[table=<2>] [cell][color="+NumCol+"]+30[/color] Max health[/cell] [cell]     [color="+NumCol+"]+10[/color] Max stamina[/cell] [cell][color="+NumCol+"]-0.05[/color] Stamina drain[/cell] [cell]     [color="+NumCol+"]-0.1[/color] Stamina recharge[/cell][/table]",
+	UpgradeType.ENDURANCE: "[table=<2>] [cell][color="+NumCol+"]+30[/color] Max health[/cell] [cell]     [color="+NumCol+"]+10[/color] Max stamina[/cell] [cell][color="+NumCol+"]-0.03[/color] Stamina drain[/cell] [cell]     [color="+NumCol+"]-0.1[/color] Stamina recharge[/cell][/table]",
 	#UpgradeType.ACTIVELEVEL: "- OR - |UPGRADE exsisting active|",
-	#UpgradeType.DASH: "[color="+NumCol+"]+1[/color] addtional dash",
+	UpgradeType.DASH: "[table=<2>] [cell][color="+NumCol+"]-0.05[/color] Stamina drain[/cell] [cell] [color="+NumCol+"]-0.3[/color] Stamina recharge[/cell][/table]",
 	
 	UpgradeType.SPLIT: "[color="+NumCol+"]+1[/color] additional tail/weapon and disperses flat damage between them",
 	
@@ -77,7 +94,7 @@ var UpgradName:Dictionary = {
 	UpgradeType.STRENGTH: "Strength",
 	UpgradeType.ENDURANCE: "Endurance",
 	#UpgradeType.ACTIVELEVEL: "- OR - |UPGRADE exsisting active|",
-	#UpgradeType.DASH: "Dash",
+	UpgradeType.DASH: "Dash",
 	
 	UpgradeType.SPLIT: "Split",
 	
@@ -94,25 +111,9 @@ var UpgradeIcons:Dictionary = {
 	UpgradeType.STRENGTH: load("res://Assets/Upgrades/strength.png"),
 	UpgradeType.ENDURANCE: load("res://Assets/Upgrades/endurance.png"),
 	#UpgradeType.ACTIVELEVEL: load(), #Some kind of PLUS icon
-	#UpgradeType.DASH: load("res://Assets/Upgrades/dash.png"),
+	UpgradeType.DASH: load("res://Assets/Upgrades/dash.png"),
 	
-	UpgradeType.SPLIT: load("res://Assets/Upgrades/dash.png"),
-	
-	#UpgradeType.HOMING: load(),
-	#UpgradeType.FLAMING: load(),
-	#UpgradeType.FLOWING: load(),
-	#UpgradeType.LEECH: load(),
-	#UpgradeType.BLOCK: load(),
-}
-
-var UpgradeEffects:Dictionary = {
-	UpgradeType.CRIT: {"crit_chance":10,"crit_mult":0.25},
-	UpgradeType.SHARPNESS: {"flat_damage":5,"bleed":2,"bleed_rate":-0.1},
-	UpgradeType.STRENGTH: {"tail_strength":500,"flat_damage":5,"speed":50},
-	UpgradeType.ENDURANCE: {"Max_Health":30,"stamina_rec":-0.5,"stamina_dep":-0.03},
-	#UpgradeType.ACTIVELEVEL: load(), #Some kind of PLUS icon
-	#UpgradeType.DASH: load("res://Assets/Upgrades/dash.png"),
-	UpgradeType.SPLIT: {"flat_damage":-5,},
+	UpgradeType.SPLIT: load("res://Assets/Upgrades/split.png"),
 	
 	#UpgradeType.HOMING: load(),
 	#UpgradeType.FLAMING: load(),
@@ -141,8 +142,8 @@ func applyUpgrade(upgrade):
 			Player.Max_Health += 30
 			Player.stamina_rec -= 0.5
 			Player.stamina_dep -= 0.03
-		#UpgradeType.DASH:
-			#printerr("DASH NOT IMPLEMENTED!")
+		UpgradeType.DASH:
+			printerr("DASH NOT IMPLEMENTED!")
 		UpgradeType.SPLIT:
 			#Player.split += 1
 			Player.set_split(1)
@@ -156,3 +157,12 @@ func applyUpgrade(upgrade):
 			#pass
 		#UpgradeType.BLOCK: 
 			#pass
+
+func RandDirection():
+	randomize()
+	var v = Vector2.ZERO
+	while v == Vector2.ZERO:
+		v = Vector2(round(rand_range(-1,1)),round(rand_range(-1,1)))
+	return v
+		
+		

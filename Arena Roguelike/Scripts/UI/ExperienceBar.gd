@@ -22,6 +22,7 @@ func add_experience(amount:float):
 
 func add_level():
 	current_level += 1
+	UI.health = UI.maxHealth
 	var level:String
 	if current_level < 10: level = " "
 	level += String(current_level)

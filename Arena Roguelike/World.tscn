@@ -1,10 +1,10 @@
-[gd_scene load_steps=36 format=2]
+[gd_scene load_steps=48 format=2]
 
 [ext_resource path="res://Scenes/Entities/Player/Player_Controller.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Enviroment/arena.0.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Enviroment/lava.png" type="Texture" id=3]
 [ext_resource path="res://Assets/UI/healthbar.png" type="Texture" id=4]
-[ext_resource path="res://Assets/_MISC/bayer8tile4.png" type="Texture" id=5]
+[ext_resource path="res://Assets/UI/Right.png" type="Texture" id=5]
 [ext_resource path="res://Scripts/World.gd" type="Script" id=6]
 [ext_resource path="res://Scripts/Killing/arena_area.gd" type="Script" id=7]
 [ext_resource path="res://Assets/UI/healthbar_border.png" type="Texture" id=8]
@@ -20,6 +20,9 @@
 [ext_resource path="res://Scripts/UI/PauseMenu.gd" type="Script" id=18]
 [ext_resource path="res://Scripts/UI/CurrentUpgrades.gd" type="Script" id=19]
 [ext_resource path="res://Scenes/UI/Stats.tscn" type="PackedScene" id=20]
+[ext_resource path="res://Assets/UI/RatGameProfile.png" type="Texture" id=21]
+[ext_resource path="res://Assets/UI/Left.png" type="Texture" id=22]
+[ext_resource path="res://Assets/UI/WSAD.png" type="Texture" id=23]
 
 [sub_resource type="ShaderMaterial" id=10]
 
@@ -107,22 +110,8 @@ void fragment()
 }
 "
 
-[sub_resource type="Gradient" id=11]
-offsets = PoolRealArray( 0, 0.453416, 0.63354, 0.850932 )
-colors = PoolColorArray( 0, 0, 0, 1, 0.717647, 0.517647, 0.254902, 1, 0.239216, 0.211765, 0.109804, 1, 0.388235, 0.192157, 0.192157, 1 )
-
-[sub_resource type="GradientTexture" id=7]
-gradient = SubResource( 11 )
-
 [sub_resource type="ShaderMaterial" id=1]
 shader = SubResource( 2 )
-shader_param/u_bit_depth = 255
-shader_param/u_contrast = 2.0
-shader_param/u_offset = null
-shader_param/u_dither_size = 10
-shader_param/transparent_background = true
-shader_param/u_dither_tex = ExtResource( 5 )
-shader_param/u_color_tex = SubResource( 7 )
 
 [sub_resource type="Shader" id=13]
 code = "shader_type canvas_item;
@@ -772,12 +761,57 @@ tracks/3/keys = {
 "values": [ Color( 0, 0, 0, 1 ) ]
 }
 
+[sub_resource type="Curve" id=28]
+_data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.330189, 1 ), 0.493023, 0.493023, 0, 0, Vector2( 0.693396, 1 ), -0.77091, -0.77091, 0, 0, Vector2( 1, 0.345455 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=11]
+offsets = PoolRealArray( 0, 0.469613, 0.994475, 1 )
+colors = PoolColorArray( 0.996078, 0.32549, 0.309804, 1, 0.639216, 0.376471, 0.701961, 1, 0.431373, 1, 0.305882, 0.784314, 1, 0.792157, 0.121569, 0.768627 )
+
+[sub_resource type="DynamicFont" id=32]
+size = 50
+extra_spacing_top = -9
+extra_spacing_space = -1
+font_data = ExtResource( 17 )
+
+[sub_resource type="SegmentShape2D" id=23]
+a = Vector2( -2019, -858 )
+b = Vector2( 2254, -924 )
+
+[sub_resource type="SegmentShape2D" id=24]
+a = Vector2( -1808, -1235 )
+b = Vector2( -1758, 1550 )
+
+[sub_resource type="DynamicFont" id=25]
+size = 72
+font_data = ExtResource( 17 )
+
+[sub_resource type="StyleBoxFlat" id=34]
+bg_color = Color( 0.592157, 0.839216, 0.4, 1 )
+
+[sub_resource type="StyleBoxFlat" id=35]
+bg_color = Color( 0.592157, 0.839216, 0.4, 1 )
+
+[sub_resource type="StyleBoxFlat" id=36]
+bg_color = Color( 0.592157, 0.839216, 0.4, 1 )
+
+[sub_resource type="DynamicFont" id=27]
+size = 72
+outline_size = 4
+font_data = ExtResource( 17 )
+
+[sub_resource type="DynamicFont" id=33]
+size = 64
+extra_spacing_top = -9
+extra_spacing_space = -1
+font_data = ExtResource( 17 )
+
 [node name="World" type="Node2D"]
 material = SubResource( 10 )
 script = ExtResource( 6 )
 
 [node name="arena_area" type="Area2D" parent="."]
-position = Vector2( -170.444, 99 )
+position = Vector2( -517.444, 67 )
 scale = Vector2( 1.277, 1.277 )
 script = ExtResource( 7 )
 
@@ -789,7 +823,7 @@ polygon = PoolVector2Array( -319, -160, 19, -355, 449, -407, 887, -338, 1196, -1
 modulate = Color( 0.635294, 0.521569, 0.521569, 1 )
 material = SubResource( 1 )
 use_parent_material = true
-position = Vector2( 440.778, 140.5 )
+position = Vector2( 93.778, 108.5 )
 scale = Vector2( 1.27685, 1.27685 )
 z_index = -1
 z_as_relative = false
@@ -797,7 +831,7 @@ texture = ExtResource( 2 )
 
 [node name="Lava" type="Sprite" parent="."]
 material = SubResource( 14 )
-position = Vector2( 405.5, 125 )
+position = Vector2( 58.4999, 93 )
 scale = Vector2( 4.62625, 3.44 )
 z_index = -2
 z_as_relative = false
@@ -816,16 +850,17 @@ __meta__ = {
 }
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
+position = Vector2( -347, -32 )
 color = Color( 1, 0.905882, 0.85098, 1 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 15 )
 
 [node name="player_spawn" type="Position2D" parent="."]
-position = Vector2( 331, -297 )
+position = Vector2( -16.0001, -329 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 454, 162 )
+position = Vector2( 107, 130 )
 current = true
 zoom = Vector2( 3, 3 )
 
@@ -837,13 +872,16 @@ z_index = -1
 texture = SubResource( 19 )
 
 [node name="Player_Controller" parent="." instance=ExtResource( 1 )]
-position = Vector2( 351, 40 )
-stamina_dep = 0.3
-tail_strength = 2152.0
+position = Vector2( 3.99988, 8 )
+stamina_rec = 1
+tail_strength = 2000.0
+flat_damage = 12.0
 bleed = 1
-crit_chance = 100.0
+crit_chance = 10.0
+crit_mult = 2.0
 
 [node name="UICanvas" type="Node2D" parent="."]
+position = Vector2( -347, -32 )
 z_index = 15
 z_as_relative = false
 
@@ -980,8 +1018,158 @@ mouse_filter = 1
 text = "PAUSED"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Tween" type="Tween" parent="UICanvas/UI/PauseMenu"]
+
+[node name="controls" type="Control" parent="UICanvas/UI/PauseMenu"]
+modulate = Color( 0.760784, 0.709804, 0.709804, 1 )
+self_modulate = Color( 1, 1, 1, 0.564706 )
+margin_left = -327.0
+margin_top = 220.0
+margin_right = 1249.0
+margin_bottom = 948.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="UICanvas/UI/PauseMenu/controls"]
+modulate = Color( 1, 1, 1, 0.839216 )
+margin_left = -803.0
+margin_top = 100.0
+margin_right = 2388.0
+margin_bottom = 865.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Rat" type="TextureRect" parent="UICanvas/UI/PauseMenu/controls"]
+margin_left = 232.0
+margin_top = 145.0
+margin_right = 1296.0
+margin_bottom = 357.0
+texture = ExtResource( 21 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprint" type="Control" parent="UICanvas/UI/PauseMenu/controls"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Line2D2" type="Line2D" parent="UICanvas/UI/PauseMenu/controls/Sprint"]
+position = Vector2( 1292, 271 )
+rotation = -1.65807
+scale = Vector2( 1.07878, 0.609706 )
+z_index = 15
+z_as_relative = false
+points = PoolVector2Array( 0, 0, -171.803, 1081.13 )
+width = 120.0
+width_curve = SubResource( 28 )
+default_color = Color( 0.996078, 0.639216, 0.294118, 1 )
+gradient = SubResource( 11 )
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="M-RIGHT" type="Sprite" parent="UICanvas/UI/PauseMenu/controls/Sprint"]
+position = Vector2( 1881, 532 )
+scale = Vector2( 5, 5 )
+texture = ExtResource( 5 )
+
+[node name="Sprint" type="RichTextLabel" parent="UICanvas/UI/PauseMenu/controls/Sprint"]
+margin_left = 1708.0
+margin_top = 231.0
+margin_right = 2034.0
+margin_bottom = 307.0
+mouse_filter = 2
+custom_fonts/normal_font = SubResource( 32 )
+bbcode_enabled = true
+bbcode_text = "Drag to [color=#f82b2b]Sprint[/color]"
+text = "Drag to Sprint"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Swing" type="Control" parent="UICanvas/UI/PauseMenu/controls"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Swing" type="RichTextLabel" parent="UICanvas/UI/PauseMenu/controls/Swing"]
+margin_left = -464.0
+margin_top = 229.0
+margin_right = -138.0
+margin_bottom = 305.0
+mouse_filter = 2
+custom_fonts/normal_font = SubResource( 32 )
+bbcode_enabled = true
+bbcode_text = "Drag to [color=#f82b2b]swing[/color]"
+text = "Drag to swing"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Line2D" type="Line2D" parent="UICanvas/UI/PauseMenu/controls/Swing"]
+position = Vector2( 258.528, 280.921 )
+rotation = 1.0472
+scale = Vector2( 1.07878, 0.609706 )
+z_index = 15
+z_as_relative = false
+points = PoolVector2Array( 0, 0, -237.268, 1052.13 )
+width = 120.0
+width_curve = SubResource( 28 )
+default_color = Color( 0.996078, 0.639216, 0.294118, 1 )
+gradient = SubResource( 11 )
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="M-LEFT" type="Sprite" parent="UICanvas/UI/PauseMenu/controls/Swing"]
+position = Vector2( -306, 535 )
+scale = Vector2( 5, 5 )
+texture = ExtResource( 22 )
+
+[node name="Move" type="Control" parent="UICanvas/UI/PauseMenu/controls"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Move" type="RichTextLabel" parent="UICanvas/UI/PauseMenu/controls/Move"]
+margin_left = 626.0
+margin_top = 423.0
+margin_right = 952.0
+margin_bottom = 499.0
+mouse_filter = 2
+custom_fonts/normal_font = SubResource( 32 )
+bbcode_enabled = true
+bbcode_text = "Press to [color=#f82b2b]Move[/color]"
+text = "Press to Move"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WASD" type="TextureRect" parent="UICanvas/UI/PauseMenu/controls/Move"]
+margin_left = 550.0
+margin_top = 418.0
+margin_right = 1004.0
+margin_bottom = 828.0
+texture = ExtResource( 23 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CurrentUpgrades" type="Control" parent="UICanvas/UI"]
 margin_left = -1012.0
@@ -1012,5 +1200,125 @@ visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 
+[node name="Border" type="StaticBody2D" parent="." groups=["Border"]]
+position = Vector2( 0, -32 )
+
+[node name="Top" type="CollisionShape2D" parent="Border"]
+position = Vector2( 0, -255 )
+shape = SubResource( 23 )
+
+[node name="Bottom" type="CollisionShape2D" parent="Border"]
+position = Vector2( 0, 2379 )
+shape = SubResource( 23 )
+
+[node name="Left" type="CollisionShape2D" parent="Border"]
+position = Vector2( -221, 0 )
+shape = SubResource( 24 )
+
+[node name="Right" type="CollisionShape2D" parent="Border"]
+position = Vector2( 4028, 0 )
+shape = SubResource( 24 )
+
+[node name="DebugButtons" type="Panel" parent="."]
+modulate = Color( 1, 1, 1, 0.827451 )
+self_modulate = Color( 1, 1, 1, 0.717647 )
+margin_left = 938.0
+margin_top = 412.0
+margin_right = 1573.0
+margin_bottom = 933.0
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DebugButtons" type="VBoxContainer" parent="DebugButtons"]
+margin_left = 57.0
+margin_top = 130.0
+margin_right = 560.0
+margin_bottom = 553.0
+custom_constants/separation = 20
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="XP" type="Button" parent="DebugButtons/DebugButtons"]
+margin_right = 503.0
+margin_bottom = 92.0
+theme = ExtResource( 16 )
+custom_fonts/font = SubResource( 25 )
+custom_styles/pressed = SubResource( 34 )
+text = "[1] Gain XP"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="eye" type="Button" parent="DebugButtons/DebugButtons"]
+margin_top = 112.0
+margin_right = 503.0
+margin_bottom = 204.0
+theme = ExtResource( 16 )
+custom_fonts/font = SubResource( 25 )
+custom_styles/pressed = SubResource( 35 )
+text = "[2] EyeGuy"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="zombie" type="Button" parent="DebugButtons/DebugButtons"]
+margin_top = 224.0
+margin_right = 503.0
+margin_bottom = 316.0
+theme = ExtResource( 16 )
+custom_fonts/font = SubResource( 25 )
+custom_styles/pressed = SubResource( 36 )
+text = "[3] Zombie"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="DebugButtons"]
+modulate = Color( 1, 0.168627, 0.168627, 1 )
+anchor_right = 0.706
+margin_left = 159.0
+margin_top = 27.0
+margin_right = 22.69
+margin_bottom = 114.0
+mouse_filter = 1
+custom_fonts/normal_font = SubResource( 27 )
+bbcode_enabled = true
+bbcode_text = "[color=#ff6363][wave amp=50 freq=2]Spawner[/wave][/color]"
+text = "Spawner"
+fit_content_height = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+self_modulate = Color( 1, 1, 1, 0.858824 )
+show_behind_parent = true
+margin_left = -1429.0
+margin_top = -771.0
+margin_right = -986.0
+margin_bottom = -662.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tip" type="RichTextLabel" parent="."]
+margin_left = -1401.0
+margin_top = -751.0
+margin_right = 897.0
+margin_bottom = -675.0
+custom_fonts/normal_font = SubResource( 33 )
+bbcode_enabled = true
+bbcode_text = "Press [color=#f82b2b]Escape[/color] "
+text = "Press Escape "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="body_entered" from="arena_area" to="arena_area" method="_on_arena_area_body_entered"]
 [connection signal="body_exited" from="arena_area" to="arena_area" method="_on_arena_area_body_exited"]
+[connection signal="pressed" from="DebugButtons/DebugButtons/XP" to="." method="xp"]
+[connection signal="pressed" from="DebugButtons/DebugButtons/eye" to="." method="eye"]
+[connection signal="pressed" from="DebugButtons/DebugButtons/zombie" to="." method="zomb"]

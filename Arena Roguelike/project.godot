@@ -9,13 +9,13 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "RigidBody2D",
-"class": "enemy",
+"base": "Node",
+"class": "EnemyBehavoir",
 "language": "GDScript",
-"path": "res://Scripts/Enemies/Enemy.gd"
+"path": "res://Scripts/Enemies/EnemyBehavoir.gd"
 } ]
 _global_script_class_icons={
-"enemy": ""
+"EnemyBehavoir": ""
 }
 
 [application]
@@ -36,7 +36,7 @@ window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/Clipboard_Panel/plugin.cfg", "res://addons/GDCharts/plugin.cfg", "res://addons/SceneFactory/plugin.cfg", "res://addons/acro_hitboxes/plugin.cfg", "res://addons/gomask2d/plugin.cfg", "res://addons/zoomy/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/Clipboard_Panel/plugin.cfg", "res://addons/acro_hitboxes/plugin.cfg", "res://addons/gomask2d/plugin.cfg", "res://addons/zoomy/plugin.cfg" )
 
 [input]
 
@@ -66,7 +66,12 @@ move_down={
 }
 swing={
 "deadzone": 0.5,
-"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+dash={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":2,"pressed":false,"doubleclick":false,"script":null)
  ]
 }
 
@@ -76,4 +81,4 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
-environment/default_environment="res://default_env.tres"
+quality/driver/driver_name="GLES2"

@@ -23,7 +23,8 @@ var Key_Mods:Dictionary = {
 				  "bleed":{"color":"#ffc24d", "waveAmp":"0"}, 
 				  "bleed_rate":{"color":"#ffc24d", "waveAmp":"0"},
 				
-				  "split":{"color":"#ffc24d", "waveAmp":"0"}
+				  "split":{"color":"#ffc24d", "waveAmp":"0"},
+				  "tail_length":{"color":"#ffc24d", "waveAmp":"0"}
 				}
 
 var Values:Array
@@ -45,16 +46,16 @@ var Value_Mods:Dictionary = {
 				  "bleed":{"color":"#ffffff", "waveAmp":"0", "change":0}, 
 				  "bleed_rate":{"color":"#ffffff", "waveAmp":"0", "change":0},
 				
-				  "split":{"color":"#ffffff", "waveAmp":"0", "change":0}
+				  "split":{"color":"#ffffff", "waveAmp":"0", "change":0},
+				  "tail_length":{"color":"#ffffff", "waveAmp":"0", "change":0}
 				}
 
-var offset = Vector2(0,1000)
+var offset = Vector2(0,1300)
 
 var edit_color
 var confirm_color = Color(1,0.4,0.4)
 
 func _ready():
-	
 	$edit.visible = false
 	edit_color = edit_button.modulate
 	_update()
@@ -74,8 +75,11 @@ func increase_value(valueName:String,changeAmount:float = 0):
 	var key_amp = "0"
 	
 	if changeAmount != 0:
-		value_color =  "#7bf977"
-		key_color =  "#7bf977"
+		var color
+		if changeAmount < 0: color = "#ff3030"
+		else: color = "#7bf977"
+		value_color =  color
+		key_color =  color
 		key_amp = "50"
 		value_amp = "50"
 	Key_Mods[valueName].color = key_color
@@ -118,7 +122,8 @@ func update_Keys():
 				  "[cell][wave amp="+mods[9].waveAmp+" freq=2][color="+mods[9].color+"]Bleed Stacks :[/color][/wave][/cell]", 
 				  "[cell][wave amp="+mods[10].waveAmp+" freq=2][color="+mods[10].color+"]Bleed Rate :[/color][/wave][/cell]",
 				
-				  "[cell][wave amp="+mods[10].waveAmp+" freq=2][color="+mods[10].color+"]Tail Split :[/color][/wave][/cell][/table]"
+				  "[cell][wave amp="+mods[11].waveAmp+" freq=2][color="+mods[11].color+"]Tail Split :[/color][/wave][/cell]",
+				  "[cell][wave amp="+mods[12].waveAmp+" freq=2][color="+mods[12].color+"]Tail Length :[/color][/wave][/cell][/table]"
 			]
 	Keys_ref.bbcode_text = ""
 	for key in Keys:
@@ -131,9 +136,9 @@ func update_Values():
 				  "[table=<1>][cell][wave amp="+mods[0].waveAmp+" freq=2][color="+mods[0].color+"]"+String(GM.Player.speed+mods[0].change)+"[/color][/wave][/cell]",
 				  "[cell][wave amp="+mods[1].waveAmp+" freq=2][color="+mods[1].color+"]"+String(GM.Player.Max_Health+mods[1].change)+"[/color][/wave][/cell]",
 						
-				  "[cell][wave amp="+mods[2].waveAmp+" freq=2][color="+mods[2].color+"]"+String(100+mods[2].change)+"[/color][/wave][/cell]",
-				  "[cell][wave amp="+mods[3].waveAmp+" freq=2][color="+mods[3].color+"]+"+String(GM.Player.stamina_rec+mods[3].change)+"/second[/color][/wave][/cell]",
-				  "[cell][wave amp="+mods[4].waveAmp+" freq=2][color="+mods[4].color+"]-"+String(GM.Player.stamina_dep+mods[4].change)+"/second[/color][/wave][/cell]", 
+				  "[cell][wave amp="+mods[2].waveAmp+" freq=2][color="+mods[2].color+"]"+String(GM.Player.Max_Stamina+mods[2].change)+"[/color][/wave][/cell]",
+				  "[cell][wave amp="+mods[3].waveAmp+" freq=2][color="+mods[3].color+"]+"+String(stepify(GM.Player.stamina_rec+mods[3].change,0.01))+"/second[/color][/wave][/cell]",
+				  "[cell][wave amp="+mods[4].waveAmp+" freq=2][color="+mods[4].color+"]-"+String(stepify((GM.Player.stamina_dep+mods[4].change),0.01))+"/second[/color][/wave][/cell]", 
 
 				  "[cell][wave amp="+mods[5].waveAmp+" freq=2][color="+mods[5].color+"]"+String((GM.Player.tail_strength+mods[5].change)/100)+"mph[/color][/wave][/cell]", 
 
@@ -143,9 +148,10 @@ func update_Values():
 				  "[cell][wave amp="+mods[8].waveAmp+" freq=2][color="+mods[8].color+"]"+String(GM.Player.crit_mult+mods[8].change)+"X[/color][/wave][/cell]",
 
 				  "[cell] [wave amp="+mods[9].waveAmp+" freq=2][color="+mods[9].color+"]"+String(GM.Player.bleed+mods[9].change)+"X[/color][/wave][/cell]", 
-				  "[cell][wave amp="+mods[10].waveAmp+" freq=2][color="+mods[10].color+"]"+String(1/(GM.Player.bleed_rate+mods[10].change))+"/second[/color][/wave][/cell]",
+				  "[cell][wave amp="+mods[10].waveAmp+" freq=2][color="+mods[10].color+"]"+String(stepify(1/(GM.Player.bleed_rate+mods[10].change),0.01))+"/second[/color][/wave][/cell]",
 				
-				  "[cell][wave amp="+mods[10].waveAmp+" freq=2][color="+mods[10].color+"]"+String(GM.Player.split+mods[10].change)+" tails[/color][/wave][/cell][/table]"
+				  "[cell][wave amp="+mods[11].waveAmp+" freq=2][color="+mods[11].color+"]"+String(GM.Player.split+mods[11].change)+" extra tails[/color][/wave][/cell]",
+				  "[cell][wave amp="+mods[12].waveAmp+" freq=2][color="+mods[12].color+"]"+String(GM.Player.tail_length)+" [/color][/wave][/cell][/table]"
 			]
 		Values_ref.bbcode_text = ""
 		for value in Values:
@@ -153,6 +159,9 @@ func update_Values():
 			
 func open(can_edit:bool = false):
 	edit_button.visible = can_edit
+	$DebugTip.visible = can_edit
+	if $edit.visible:
+		confirm_edit()
 	if $Tween.is_active(): yield($Tween,"tween_all_completed")
 	reset_mods()
 	$Tween.interpolate_property(self,"rect_position",Vector2.ZERO-offset,Vector2.ZERO,1.75,Tween.TRANS_ELASTIC)
@@ -161,6 +170,8 @@ func open(can_edit:bool = false):
 	$Tween.start()
 
 func close():
+	if $edit.visible:
+		confirm_edit()
 	reset_mods()
 	$Tween.interpolate_property(self,"rect_position",Vector2.ZERO,Vector2.ZERO-offset,1.2,Tween.TRANS_ELASTIC)
 	$Tween.start()
@@ -178,6 +189,7 @@ func edit():
 	Values_ref.visible = false
 	edit_button.text = "Confirm"
 	$edit_button.modulate = confirm_color
+
 
 func confirm_edit():
 	$edit.visible = false

@@ -17,4 +17,4 @@ disabled = true
 position = Vector2( 0, 9 )
 node_a = NodePath("..")
 bias = 0.9
-softness = 0.3
+softness = 0.4

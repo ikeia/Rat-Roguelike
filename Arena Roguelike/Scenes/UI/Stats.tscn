@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Assets/Fonts/Rubik-Italic-VariableFont_wght.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/UI/StatsPanel.gd" type="Script" id=2]
@@ -45,6 +45,22 @@ font_data = ExtResource( 1 )
 size = 64
 font_data = ExtResource( 4 )
 
+[sub_resource type="DynamicFont" id=32]
+size = 36
+extra_spacing_top = -9
+extra_spacing_space = -1
+font_data = ExtResource( 4 )
+
+[sub_resource type="StyleBoxFlat" id=33]
+bg_color = Color( 0.145098, 0.145098, 0.164706, 1 )
+border_width_left = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color( 1, 1, 1, 1 )
+border_blend = true
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="Stats" type="Control"]
 pause_mode = 2
 rect_scale = Vector2( 0.7, 0.7 )
@@ -58,7 +74,7 @@ __meta__ = {
 margin_left = -1546.0
 margin_top = -1613.0
 margin_right = -613.0
-margin_bottom = 403.0
+margin_bottom = 474.0
 mouse_filter = 1
 size_flags_vertical = 8
 custom_styles/panel = SubResource( 28 )
@@ -378,15 +394,66 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="tail_length" type="LineEdit" parent="edit"]
+margin_top = 984.0
+margin_right = 214.0
+margin_bottom = 1070.0
+theme = ExtResource( 3 )
+custom_fonts/font = SubResource( 30 )
+text = "1.5"
+expand_to_text_length = true
+clear_button_enabled = true
+caret_blink = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="edit_button" type="Button" parent="."]
 modulate = Color( 0.407843, 1, 0.403922, 1 )
 margin_left = -1011.0
-margin_top = 268.571
+margin_top = 360.0
 margin_right = -803.0
-margin_bottom = 350.571
+margin_bottom = 442.0
 custom_colors/font_color = Color( 0.505882, 0.490196, 0.490196, 1 )
 custom_fonts/font = SubResource( 31 )
 text = "Edit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DebugTip" type="Control" parent="."]
+margin_left = -1451.0
+margin_top = 428.571
+margin_right = -1411.0
+margin_bottom = 468.571
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="DebugTip"]
+margin_left = 30.9999
+margin_top = 64.286
+margin_right = 995.0
+margin_bottom = 152.286
+rect_scale = Vector2( 2, 2 )
+mouse_filter = 2
+custom_fonts/normal_font = SubResource( 32 )
+bbcode_enabled = true
+bbcode_text = "press the [color=#f82b2b]edit button[/color] 
+ to type in new stats "
+text = "press the edit button 
+ to type in new stats "
+__meta__ = {
+"_edit_use_anchors_": false,
+"_editor_description_": ""
+}
+
+[node name="Panel2" type="Panel" parent="DebugTip"]
+show_behind_parent = true
+margin_top = 43.0
+margin_right = 744.0
+margin_bottom = 219.0
+custom_styles/panel = SubResource( 33 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

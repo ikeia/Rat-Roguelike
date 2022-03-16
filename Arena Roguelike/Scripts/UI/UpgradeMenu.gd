@@ -23,8 +23,13 @@ func _ready():
 		choice.connect("mouse_exited", self, "exitButton")
 
 func open():
+	if $Tween.is_active():
+		yield($Tween,"tween_all_completed")
+	get_tree().paused = true
 	$Title.self_modulate.a = 1
-	$Text/TailLegnth.text = String(UI.level)
+	#GM.Player.tail_length = clamp(UI.level-2,1,10)
+	$Text/TailLegnth.text = String(GM.Player.tail_length)
+	$Text/Level.text = String(UI.level)
 	generateUpgrades()
 	$Tween.interpolate_property($Title,"rect_position",$Title.rect_position+offset,$Title.rect_position, openDuration*0.7, Tween.TRANS_ELASTIC)
 	$Tween.interpolate_property($Panel,"rect_position",$Panel.rect_position+offset,$Panel.rect_position, openDuration*0.6, Tween.TRANS_ELASTIC)
@@ -43,13 +48,16 @@ func open():
 	$Tween.start()
 	UI.StatPanel.open()
 	yield($Tween,"tween_all_completed")
+	$AnimationPlayer2.play("begin")
 	choosen = false
 
 	
 
 func close():
+	get_tree().paused = false
 	$AnimationPlayer.stop(false)
 	UI.StatPanel.close()
+	GM.Player.swinging = Input.is_action_pressed("swing")
 	#$AnimationPlayer.play("begin")
 	$Tween.stop_all()
 	$Tween.interpolate_property($Title,"rect_position",$Title.rect_position,$Title.rect_position-offset, openDuration*1, Tween.TRANS_ELASTIC)
@@ -81,6 +89,8 @@ func setInfo(choice:int):
 	if choice == -1:
 		info.bbcode_text = ""
 		upgradeName.text = ""
+		if UI.StatPanel != null:
+			UI.StatPanel.reset_mods()
 		return
 	UI.StatPanel.set_values(GM.UpgradeType[upgradeSelection[choice]])
 	info.bbcode_text = GM.UpgradeInfo[GM.UpgradeType[upgradeSelection[choice]]] 

@@ -26,6 +26,14 @@ var level = 1
 
 var wave
 
+func reset():
+	HealthBar = null
+	ExperienceBar = null
+	UpgradeMenu = null
+	PauseMenu = null
+	CurrentUpgrades = null
+	StatPanel = null
+
 func obtainUpgrade(upgrade):
 	if upgradesObtained.size() != level-1:
 		upgradesObtained.append(upgrade)
@@ -62,7 +70,7 @@ func set_stamina(value:float):
 	
 func set_maxStamina(value:float):
 	maxStamina = value
-	GM.Player
+	GM.Player.Max_Stamina = value
 
 func add_experience(amount:float,position:Vector2 = Vector2.ZERO):
 	experience = clamp(ExperienceBar.current_experience+amount,0,experience_goal)

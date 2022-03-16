@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Assets/Enemies/Goat/Simple_Rig-0.png" type="Texture" id=1]
-[ext_resource path="res://Scripts/Enemies/Enemy.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/Enemies/EnemyBehavoir.gd" type="Script" id=2]
 [ext_resource path="res://Scenes/Entities/enemies/Enemey_Ui.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/Enemies/Goat/Simple_Rig-1.png" type="Texture" id=4]
 [ext_resource path="res://Killing/Dissolve.shader" type="Shader" id=6]

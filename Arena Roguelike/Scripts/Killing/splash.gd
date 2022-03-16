@@ -23,12 +23,11 @@ func _physics_process(delta):
 				emitting = true
 			else:
 				yield(get_tree().create_timer(1),"timeout")
-				if body.has_method("kill"):
-					body.kill()
+				if body.is_in_group("Player"):
 					sprite.scale = scale_ref
-					queue_free()
-				else:
-					body.queue_free()
+					GM.Player.take_damage(5)
+				body.kill()
+				queue_free()
 		global_position = get_parent().global_position
 		sprite.modulate.a = move_toward(sprite.modulate.a,0,0.1)
 		
